@@ -10,6 +10,14 @@ from flask import render_template, request, redirect, url_for, flash, session, a
 from werkzeug.utils import secure_filename
 
 
+def listdir(path):
+    filelst = []
+    rootdir = path
+    for subdir, dirs, files in os.walk(rootdir):
+        filelst = [f for f in files if not f[0] == '.']
+    return filelst
+
+
 ###
 # Routing for your application.
 ###
@@ -54,6 +62,14 @@ def login():
             flash('You were logged in')
             return redirect(url_for('add_file'))
     return render_template('login.html', error=error)
+    
+@app.route('/filelisting')
+def filelisting():
+    if not session.get('logged_in'):
+        abort(401)
+    
+    lst = listdir(app.config['UPLOAD_FOLDER'])
+    return render_template('filelisting.html',lst=lst)
 
 @app.route('/logout')
 def logout():
