@@ -1,8 +1,12 @@
 {% extends "base.html" %}
+{% block css %} 
+<link rel='stylesheet' type='text/css' href='listing.css'>
 
+{% endblock%}
 {% block main %}
 <h1 class="page-header">File Listing</h1>
-{% with filelist = lst %}
+{% with filelist = files %}
+    <h3>Files</h3>
   {% if filelist %}
     <div>
       <ul>
@@ -10,6 +14,16 @@
         <li>{{ file }}</li>
       {% endfor %}
       </ul>
+    </div>
+  {% endif %}
+{% endwith %}
+{% with imglist = imgs %}
+    <h3>Images</h3>
+  {% if imglist %}
+    <div>
+      {% for img in imglist %}
+        <img src = "{{ url_for('static', filename='uploads/'+img ) }}" height = '100px'>
+      {% endfor %}
     </div>
   {% endif %}
 {% endwith %}

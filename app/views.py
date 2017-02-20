@@ -68,8 +68,11 @@ def filelisting():
     if not session.get('logged_in'):
         abort(401)
     
-    lst = listdir(app.config['UPLOAD_FOLDER'])
-    return render_template('filelisting.html',lst=lst)
+    files = listdir(app.config['UPLOAD_FOLDER'])
+    imgs = [f for f in files if 'jpg' in f]
+    files = [f for f in files if not f in imgs]
+        
+    return render_template('filelisting.html',files=files, imgs=imgs)
 
 @app.route('/logout')
 def logout():
@@ -104,6 +107,12 @@ def add_header(response):
 def page_not_found(error):
     """Custom 404 page."""
     return render_template('404.html'), 404
+    
+@app.errorhandler(401)
+def unauthorized(error):
+    """Custom 401 page."""
+    return render_template('401.html'), 401
+
 
 
 if __name__ == '__main__':
